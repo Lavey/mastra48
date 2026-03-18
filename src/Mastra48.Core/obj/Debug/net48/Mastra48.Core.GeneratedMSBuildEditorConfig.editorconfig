@@ -1,0 +1,8 @@
+is_global = true
+build_property.RootNamespace = Mastra48
+build_property.ProjectDir = /home/runner/work/mastra48/mastra48/src/Mastra48.Core/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 
