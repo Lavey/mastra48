@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Port of mastra-ai/mastra to .NET 4.8 / C# 7.3")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38d1f37f31216cdf5356a67c8b0cc625521ac4bc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3a61048d30a39c3b0801e6c8bdd854ac4f8d3f5d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mastra48")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mastra48.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

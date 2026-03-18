@@ -1,16 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "AWK9dOjfPLk=",
+  "dgSpecHash": "bY4U+p//WMM=",
   "success": true,
   "projectFilePath": "/home/runner/work/mastra48/mastra48/src/Mastra48.Tests/Mastra48.Tests.csproj",
   "expectedPackageFiles": [
-    "/home/runner/.nuget/packages/microsoft.codecoverage/17.8.0/microsoft.codecoverage.17.8.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.net.test.sdk/17.8.0/microsoft.net.test.sdk.17.8.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies/1.0.3/microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.netframework.referenceassemblies.net48/1.0.3/microsoft.netframework.referenceassemblies.net48.1.0.3.nupkg.sha512",
-    "/home/runner/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
-    "/home/runner/.nuget/packages/nunit/3.14.0/nunit.3.14.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/nunit3testadapter/4.5.0/nunit3testadapter.4.5.0.nupkg.sha512"
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages/microsoft.codecoverage/17.8.0/microsoft.codecoverage.17.8.0.nupkg.sha512",
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages/microsoft.net.test.sdk/17.8.0/microsoft.net.test.sdk.17.8.0.nupkg.sha512",
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages/microsoft.netframework.referenceassemblies/1.0.3/microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages/microsoft.netframework.referenceassemblies.net48/1.0.3/microsoft.netframework.referenceassemblies.net48.1.0.3.nupkg.sha512",
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages/nunit/3.14.0/nunit.3.14.0.nupkg.sha512",
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages/nunit3testadapter/4.5.0/nunit3testadapter.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

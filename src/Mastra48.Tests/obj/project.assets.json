@@ -676,7 +676,7 @@
     ]
   },
   "packageFolders": {
-    "/home/runner/.nuget/packages/": {}
+    "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -684,7 +684,7 @@
       "projectUniqueName": "/home/runner/work/mastra48/mastra48/src/Mastra48.Tests/Mastra48.Tests.csproj",
       "projectName": "Mastra48.Tests",
       "projectPath": "/home/runner/work/mastra48/mastra48/src/Mastra48.Tests/Mastra48.Tests.csproj",
-      "packagesPath": "/home/runner/.nuget/packages/",
+      "packagesPath": "/tmp/codeql-scratch-534c364da79edf14/dbs/csharp/working/packages",
       "outputPath": "/home/runner/work/mastra48/mastra48/src/Mastra48.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
