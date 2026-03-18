@@ -10,23 +10,23 @@ using Newtonsoft.Json.Linq;
 namespace Mastra48.Demo.Services
 {
     /// <summary>
-    /// Thin wrapper around the Mistral AI REST API.
+    /// Thin wrapper around the OpenAI-compatible REST API (chat/completions).
     /// Used when a valid API key is provided in config.json.
     /// API key is never hardcoded – it is always injected from configuration.
     /// Uses WebRequest/WebClient for compatibility with Mono on .NET Framework 4.8.
     /// </summary>
-    public class MistralService
+    public class ChatService
     {
         private readonly string _apiKey;
         private readonly string _model;
-        private const string ApiBaseUrl = "https://api.mistral.ai/v1/chat/completions";
+        private const string ApiBaseUrl = "https://api.openai.com/v1/chat/completions";
 
-        public MistralService(string apiKey, string model = "mistral-small-latest")
+        public ChatService(string apiKey, string model = "gpt-4o-mini")
         {
             if (string.IsNullOrWhiteSpace(apiKey))
-                throw new ArgumentException("API key cannot be empty.", "apiKey");
+                throw new ArgumentException("API key cannot be empty.", nameof(apiKey));
             _apiKey = apiKey;
-            _model  = model ?? "mistral-small-latest";
+            _model  = model ?? "gpt-4o-mini";
         }
 
         // ----------------------------------------------------------------
@@ -34,10 +34,10 @@ namespace Mastra48.Demo.Services
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Sends a list of messages to the Mistral chat endpoint and returns
+        /// Sends a list of messages to the chat completions endpoint and returns
         /// the assistant's reply text.
         /// </summary>
-        public Task<string> ChatAsync(List<MistralMessage> messages, int maxTokens = 1024)
+        public Task<string> ChatAsync(List<ChatMessage> messages, int maxTokens = 1024)
         {
             return Task.Run<string>(() =>
             {
@@ -79,16 +79,16 @@ namespace Mastra48.Demo.Services
         /// <summary>Single-turn completion with a system prompt and user message.</summary>
         public Task<string> CompleteAsync(string systemPrompt, string userMessage, int maxTokens = 1024)
         {
-            var messages = new List<MistralMessage>
+            var messages = new List<ChatMessage>
             {
-                new MistralMessage { Role = "system", Content = systemPrompt },
-                new MistralMessage { Role = "user",   Content = userMessage }
+                new ChatMessage { Role = "system", Content = systemPrompt },
+                new ChatMessage { Role = "user",   Content = userMessage }
             };
             return ChatAsync(messages, maxTokens);
         }
 
         /// <summary>
-        /// Asks Mistral to classify the intent of a user message.
+        /// Asks the model to classify the intent of a user message.
         /// Returns one of: "file", "web", "database", "combined_db_file", "general".
         /// </summary>
         public async Task<string> ClassifyIntentAsync(string userMessage)
@@ -118,7 +118,7 @@ namespace Mastra48.Demo.Services
         }
 
         /// <summary>
-        /// Asks Mistral to generate a short AI-powered summary of the given text.
+        /// Asks the model to generate a short AI-powered summary of the given text.
         /// </summary>
         public async Task<string> SummarizeAsync(string text, int maxChars = 3000)
         {
@@ -128,8 +128,8 @@ namespace Mastra48.Demo.Services
         }
     }
 
-    /// <summary>A single message in a Mistral chat conversation.</summary>
-    public class MistralMessage
+    /// <summary>A single message in a chat conversation.</summary>
+    public class ChatMessage
     {
         [JsonProperty("role")]
         public string Role { get; set; }

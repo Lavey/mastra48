@@ -11,11 +11,11 @@ namespace Mastra48.Demo.Config
     /// </summary>
     public class AppConfig
     {
-        /// <summary>Mistral AI API key (leave empty to use simulated responses).</summary>
-        public string MistralApiKey { get; set; }
+        /// <summary>Chat API key (leave empty to use simulated responses).</summary>
+        public string ChatApiKey { get; set; }
 
-        /// <summary>Mistral model identifier, e.g. "mistral-small-latest".</summary>
-        public string MistralModel { get; set; }
+        /// <summary>Chat model identifier, e.g. "gpt-4o-mini".</summary>
+        public string ChatModel { get; set; }
 
         /// <summary>Log level: DEBUG, INFO, WARN, ERROR.</summary>
         public string LogLevel { get; set; }
@@ -23,9 +23,9 @@ namespace Mastra48.Demo.Config
         /// <summary>Directory used by FileAgent for demo file operations.</summary>
         public string DemoDataDirectory { get; set; }
 
-        /// <summary>Returns true if a real Mistral API key is configured.</summary>
-        public bool HasMistralKey
-            => !string.IsNullOrWhiteSpace(MistralApiKey) && MistralApiKey != "YOUR_MISTRAL_API_KEY";
+        /// <summary>Returns true if a real Chat API key is configured.</summary>
+        public bool HasChatKey
+            => !string.IsNullOrWhiteSpace(ChatApiKey);
 
         // ----------------------------------------------------------------
         // Factory
@@ -40,8 +40,8 @@ namespace Mastra48.Demo.Config
         {
             var defaults = new AppConfig
             {
-                MistralApiKey = string.Empty,
-                MistralModel = "mistral-small-latest",
+                ChatApiKey = string.Empty,
+                ChatModel = "gpt-4o-mini",
                 LogLevel = "INFO",
                 DemoDataDirectory = "demo_files"
             };
@@ -56,8 +56,8 @@ namespace Mastra48.Demo.Config
 
                 return new AppConfig
                 {
-                    MistralApiKey    = jObj["MistralApiKey"]?.ToString()    ?? defaults.MistralApiKey,
-                    MistralModel     = jObj["MistralModel"]?.ToString()     ?? defaults.MistralModel,
+                    ChatApiKey       = jObj["ChatApiKey"]?.ToString()       ?? defaults.ChatApiKey,
+                    ChatModel        = jObj["ChatModel"]?.ToString()        ?? defaults.ChatModel,
                     LogLevel         = jObj["LogLevel"]?.ToString()         ?? defaults.LogLevel,
                     DemoDataDirectory= jObj["DemoDataDirectory"]?.ToString() ?? defaults.DemoDataDirectory
                 };

@@ -13,7 +13,7 @@ namespace Mastra48.Demo.Agents
     /// Supported operations:
     ///   • Search files matching a pattern
     ///   • Read file content
-    ///   • Summarise file content (optionally enhanced by Mistral AI)
+    ///   • Summarise file content (optionally enhanced by Chat AI)
     ///   • Write / append to a file (prompts user for confirmation when overwriting)
     ///   • Delete a file (always requires user confirmation)
     ///
@@ -22,13 +22,13 @@ namespace Mastra48.Demo.Agents
     public class FileAgent : AgentBase
     {
         private readonly FileService _fileService;
-        private readonly MistralService _mistral; // may be null
+        private readonly ChatService _chat; // may be null
 
-        public FileAgent(FileService fileService, MistralService mistral = null)
+        public FileAgent(FileService fileService, ChatService chat = null)
             : base("FileAgent")
         {
             _fileService = fileService ?? throw new ArgumentNullException("fileService");
-            _mistral = mistral;
+            _chat = chat;
         }
 
         // ----------------------------------------------------------------
@@ -84,7 +84,7 @@ namespace Mastra48.Demo.Agents
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Summarises a file.  When Mistral AI is available, generates an AI summary;
+        /// Summarises a file.  When Chat AI is available, generates an AI summary;
         /// otherwise produces a structural summary (line/word count + preview).
         /// </summary>
         public async Task<string> SummarizeFileAsync(string path)
@@ -95,18 +95,18 @@ namespace Mastra48.Demo.Agents
                 var structural = _fileService.SummarizeFile(path, previewLines: 15);
                 LogStep("Obliczono strukturę pliku");
 
-                if (_mistral != null)
+                if (_chat != null)
                 {
-                    LogStep("Wysyłam zawartość do Mistral AI w celu podsumowania...");
+                    LogStep("Wysyłam zawartość do Chat AI w celu podsumowania...");
                     try
                     {
                         var raw = _fileService.ReadFile(path);
-                        var aiSummary = await _mistral.SummarizeAsync(raw);
+                        var aiSummary = await _chat.SummarizeAsync(raw);
                         return structural + "\n📝 Podsumowanie AI:\n" + aiSummary;
                     }
                     catch (Exception ex)
                     {
-                        LogWarning($"Mistral AI niedostępny – {ex.Message}. Używam podsumowania strukturalnego.");
+                        LogWarning($"Chat AI niedostępny – {ex.Message}. Używam podsumowania strukturalnego.");
                     }
                 }
 

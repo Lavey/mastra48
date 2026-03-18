@@ -11,7 +11,7 @@ namespace Mastra48.Demo.Agents
     ///
     /// Responsibilities:
     ///   1. Drive the interactive console chat loop.
-    ///   2. Detect the user's intent (keyword matching + optional Mistral AI).
+    ///   2. Detect the user's intent (keyword matching + optional Chat AI).
     ///   3. Delegate to the appropriate specialised agent:
     ///        FileAgent, WebSearchAgent, or DatabaseAgent.
     ///   4. Collect results and present the final answer in green.
@@ -23,21 +23,21 @@ namespace Mastra48.Demo.Agents
         private readonly FileAgent _fileAgent;
         private readonly WebSearchAgent _webAgent;
         private readonly DatabaseAgent _dbAgent;
-        private readonly MistralService _mistral; // may be null
+        private readonly ChatService _chat; // may be null
         private readonly AppConfig _config;
 
         public ChatAgent(
             FileAgent fileAgent,
             WebSearchAgent webAgent,
             DatabaseAgent dbAgent,
-            MistralService mistral,
+            ChatService chat,
             AppConfig config)
             : base("ChatAgent")
         {
             _fileAgent = fileAgent;
             _webAgent  = webAgent;
             _dbAgent   = dbAgent;
-            _mistral   = mistral;
+            _chat      = chat;
             _config    = config;
         }
 
@@ -53,10 +53,10 @@ namespace Mastra48.Demo.Agents
         {
             PrintBanner();
             Log("System agentów uruchomiony. Gotowy do pracy.");
-            if (_mistral != null)
-                Log("Mistral AI aktywne – rozpoznawanie intencji wspierane przez LLM.");
+            if (_chat != null)
+                Log("Chat AI aktywne – rozpoznawanie intencji wspierane przez LLM.");
             else
-                Log("Mistral AI nieaktywne – używam rozpoznawania intencji opartego na słowach kluczowych.");
+                Log("Chat AI nieaktywne – używam rozpoznawania intencji opartego na słowach kluczowych.");
 
             Console.WriteLine();
 
@@ -164,19 +164,19 @@ namespace Mastra48.Demo.Agents
 
         private async Task<string> DetectIntentAsync(string query)
         {
-            // 1. Try Mistral AI classification first (if available)
-            if (_mistral != null)
+            // 1. Try Chat AI classification first (if available)
+            if (_chat != null)
             {
                 try
                 {
-                    Log("Klasyfikuję intencję przez Mistral AI...");
-                    var intent = await _mistral.ClassifyIntentAsync(query);
-                    LogStep($"Mistral zwrócił intencję: {intent}");
+                    Log("Klasyfikuję intencję przez Chat AI...");
+                    var intent = await _chat.ClassifyIntentAsync(query);
+                    LogStep($"Chat AI zwrócił intencję: {intent}");
                     return intent;
                 }
                 catch (Exception ex)
                 {
-                    LogWarning($"Mistral AI niedostępny ({ex.Message}) – przełączam na klasyfikację słownikową.");
+                    LogWarning($"Chat AI niedostępny ({ex.Message}) – przełączam na klasyfikację słownikową.");
                 }
             }
 
@@ -369,10 +369,10 @@ namespace Mastra48.Demo.Agents
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\nUżytkownik: Znajdź informacje o firmie Mistral AI");
+            Console.WriteLine("\nUżytkownik: Znajdź informacje o firmie OpenAI");
             Console.ResetColor();
 
-            var result = await _webAgent.SearchAsync("Mistral AI");
+            var result = await _webAgent.SearchAsync("OpenAI");
             PrintAssistantResponse(result);
         }
 
@@ -461,7 +461,7 @@ namespace Mastra48.Demo.Agents
             Console.WriteLine();
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
             Console.WriteLine("║           MASTRA48 – SYSTEM AGENTÓW DEMO                    ║");
-            Console.WriteLine("║  inspirowany https://github.com/mistralai                   ║");
+            Console.WriteLine("║  inspirowany https://github.com/openai                      ║");
             Console.WriteLine("╠══════════════════════════════════════════════════════════════╣");
             Console.WriteLine("║  Agenci: Chat | File | WebSearch | Database                  ║");
             Console.WriteLine("║  Wpisz 'help' po listę komend  •  'exit' aby wyjść          ║");
@@ -502,7 +502,7 @@ namespace Mastra48.Demo.Agents
             Console.WriteLine("  🔍 Wyszukiwanie w internecie:");
             Console.WriteLine("    Znajdź informacje o firmie Microsoft");
             Console.WriteLine("    Szukaj: sztuczna inteligencja");
-            Console.WriteLine("    Co to jest Mistral AI?");
+            Console.WriteLine("    Co to jest OpenAI?");
             Console.WriteLine();
             Console.WriteLine("  🔗 Scenariusze złożone:");
             Console.WriteLine("    Pobierz dane zamówień i zapisz do pliku");

@@ -16,7 +16,7 @@ namespace Mastra48.Demo
     ///     └── DatabaseAgent  – natural language → SQL → in-memory results
     ///
     /// Configuration is loaded from config.json (next to the executable).
-    /// Mistral AI integration is optional and controlled by the API key in config.json.
+    /// Chat AI integration is optional and controlled by the API key in config.json.
     /// </summary>
     internal static class Program
     {
@@ -31,23 +31,23 @@ namespace Mastra48.Demo
             // 2. Initialise services
             // ----------------------------------------------------------------
 
-            // Optional Mistral AI service (null when no API key provided)
-            MistralService mistral = null;
-            if (config.HasMistralKey)
+            // Optional Chat AI service (null when no API key provided)
+            ChatService chat = null;
+            if (config.HasChatKey)
             {
                 try
                 {
-                    mistral = new MistralService(config.MistralApiKey, config.MistralModel);
-                    WriteGray("[Main] Mistral AI zainicjowany.");
+                    chat = new ChatService(config.ChatApiKey, config.ChatModel);
+                    WriteGray("[Main] Chat AI zainicjowany.");
                 }
                 catch (Exception ex)
                 {
-                    WriteGray($"[Main] Nie można zainicjować Mistral AI: {ex.Message}");
+                    WriteGray($"[Main] Nie można zainicjować Chat AI: {ex.Message}");
                 }
             }
             else
             {
-                WriteGray("[Main] Klucz Mistral AI nie jest skonfigurowany – tryb symulacji aktywny.");
+                WriteGray("[Main] Klucz Chat AI nie jest skonfigurowany – tryb symulacji aktywny.");
             }
 
             var fileService   = new FileService(config.DemoDataDirectory ?? "demo_files");
@@ -62,8 +62,8 @@ namespace Mastra48.Demo
             // 3. Initialise agents (inject dependencies)
             // ----------------------------------------------------------------
 
-            // FileAgent (can use Mistral for AI-powered summaries)
-            var fileAgent = new FileAgent(fileService, mistral);
+            // FileAgent (can use Chat AI for AI-powered summaries)
+            var fileAgent = new FileAgent(fileService, chat);
 
             // WebSearchAgent
             var webAgent = new WebSearchAgent(searchService);
@@ -72,7 +72,7 @@ namespace Mastra48.Demo
             var dbAgent = new DatabaseAgent(dbService, fileAgent);
 
             // ChatAgent (main orchestrator)
-            var chatAgent = new ChatAgent(fileAgent, webAgent, dbAgent, mistral, config);
+            var chatAgent = new ChatAgent(fileAgent, webAgent, dbAgent, chat, config);
 
             // ----------------------------------------------------------------
             // 4. Start chat loop
