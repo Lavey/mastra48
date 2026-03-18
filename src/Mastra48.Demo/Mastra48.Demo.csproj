@@ -20,6 +20,11 @@
     </None>
   </ItemGroup>
 
+  <!-- Embed agent system prompt Markdown files as resources -->
+  <ItemGroup>
+    <EmbeddedResource Include="Agents\Prompts\*.md" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Mastra48.Core\Mastra48.Core.csproj" />
   </ItemGroup>

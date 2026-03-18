@@ -68,8 +68,11 @@ namespace Mastra48.Demo
             // WebSearchAgent
             var webAgent = new WebSearchAgent(searchService);
 
-            // DatabaseAgent (collaborates with FileAgent for DB→File scenarios)
-            var dbAgent = new DatabaseAgent(dbService, fileAgent);
+            // NaturalLanguageToSqlAgent (uses LLM for NL→SQL translation, injected into DatabaseAgent)
+            var nl2sqlAgent = new NaturalLanguageToSqlAgent(chat);
+
+            // DatabaseAgent (delegates SQL generation to NaturalLanguageToSqlAgent, collaborates with FileAgent)
+            var dbAgent = new DatabaseAgent(dbService, fileAgent, nl2sqlAgent);
 
             // ChatAgent (main orchestrator)
             var chatAgent = new ChatAgent(fileAgent, webAgent, dbAgent, chat, config);

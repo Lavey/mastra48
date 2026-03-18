@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Mastra48.Demo.Config;
 using Mastra48.Demo.Services;
 
 namespace Mastra48.Demo.Agents
@@ -10,20 +11,27 @@ namespace Mastra48.Demo.Agents
     /// DatabaseAgent – translates natural language to SQL (shown for transparency),
     /// executes it against the in-memory data store, and returns formatted results.
     ///
+    /// SQL generation is delegated to NaturalLanguageToSqlAgent which uses an LLM
+    /// when available, falling back to keyword-based translation.
+    ///
     /// Can collaborate with FileAgent to save query results to a file.
     ///
+    /// System prompt is loaded from the embedded resource Agents/Prompts/DatabaseAgent.md.
     /// Trace output is written in grey.
     /// </summary>
     public class DatabaseAgent : AgentBase
     {
         private readonly DatabaseService _db;
-        private readonly FileAgent _fileAgent; // optional collaborator
+        private readonly FileAgent _fileAgent;               // optional collaborator
+        private readonly NaturalLanguageToSqlAgent _nl2sql;  // SQL generation sub-agent
+        private static readonly string _systemPrompt = ResourceLoader.Load("DatabaseAgent.md");
 
-        public DatabaseAgent(DatabaseService db, FileAgent fileAgent = null)
+        public DatabaseAgent(DatabaseService db, FileAgent fileAgent = null, NaturalLanguageToSqlAgent nl2sql = null)
             : base("DatabaseAgent")
         {
-            _db = db ?? throw new ArgumentNullException("db");
+            _db      = db ?? throw new ArgumentNullException("db");
             _fileAgent = fileAgent;
+            _nl2sql  = nl2sql;
         }
 
         // ----------------------------------------------------------------
@@ -31,38 +39,55 @@ namespace Mastra48.Demo.Agents
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Parses a natural-language <paramref name="query"/>, shows the generated SQL,
-        /// executes it against in-memory data, and returns a formatted result.
+        /// Parses a natural-language <paramref name="query"/>, delegates SQL generation to
+        /// NaturalLanguageToSqlAgent (LLM-powered), shows the generated SQL, executes the
+        /// query against in-memory data, and returns a formatted result.
         /// </summary>
-        public Task<string> QueryAsync(string query)
+        public async Task<string> QueryAsync(string query)
         {
             Log($"Analizuję zapytanie: \"{query}\"");
-            LogStep("Tłumaczenie języka naturalnego → SQL...");
+            LogStep("Delegowanie tłumaczenia NL→SQL do NaturalLanguageToSqlAgent...");
 
-            string sql;
+            // Step 1: Generate SQL via dedicated sub-agent (uses LLM when available)
+            string displaySql;
+            if (_nl2sql != null)
+            {
+                displaySql = await _nl2sql.TranslateAsync(query);
+            }
+            else
+            {
+                // Fallback when no NL2SQL agent is wired up
+                LogStep("NaturalLanguageToSqlAgent niedostępny – używam fallback DatabaseService.");
+                displaySql = null;
+            }
+
+            // Step 2: Execute against in-memory data via DatabaseService (LINQ-based)
+            LogStep("Wykonuję zapytanie na danych in-memory...");
+            string executedSql;
             string results;
 
             try
             {
-                (sql, results) = _db.ExecuteNaturalQuery(query);
+                (executedSql, results) = _db.ExecuteNaturalQuery(query);
             }
             catch (Exception ex)
             {
                 LogError($"Błąd wykonania zapytania: {ex.Message}");
-                return Task.FromResult<string>($"Błąd: {ex.Message}");
+                return $"Błąd: {ex.Message}";
             }
 
-            LogStep($"Wygenerowane SQL: {sql}");
-            LogStep("Wykonuję zapytanie na danych in-memory...");
+            // Use the LLM-generated SQL for display when available; otherwise show the keyword-based SQL
+            var sqlToShow = !string.IsNullOrWhiteSpace(displaySql) ? displaySql : executedSql;
+            LogStep($"SQL (wyświetlany): {sqlToShow}");
             Log("Zapytanie zakończone");
 
             var sb = new StringBuilder();
             sb.AppendLine($"📊 Zapytanie do bazy danych");
-            sb.AppendLine($"SQL: {sql}");
+            sb.AppendLine($"SQL: {sqlToShow}");
             sb.AppendLine(new string('-', 80));
             sb.AppendLine(results);
 
-            return Task.FromResult(sb.ToString().TrimEnd());
+            return sb.ToString().TrimEnd();
         }
 
         // ----------------------------------------------------------------

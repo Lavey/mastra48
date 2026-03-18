@@ -17,6 +17,8 @@ namespace Mastra48.Demo.Agents
     ///   4. Collect results and present the final answer in green.
     ///
     /// Supports built-in commands: help, demo1–demo4, exit.
+    ///
+    /// System prompt is loaded from the embedded resource Agents/Prompts/ChatAgent.md.
     /// </summary>
     public class ChatAgent : AgentBase
     {
@@ -25,6 +27,15 @@ namespace Mastra48.Demo.Agents
         private readonly DatabaseAgent _dbAgent;
         private readonly ChatService _chat; // may be null
         private readonly AppConfig _config;
+        private static readonly string _systemPrompt = ResourceLoader.Load("ChatAgent.md");
+
+        // Separate system prompt for general conversational responses (not intent classification)
+        private const string _generalResponseSystemPrompt =
+            "Jesteś pomocnym asystentem wieloagentowego systemu Mastra48. " +
+            "Odpowiedz użytkownikowi pomocnie po polsku. " +
+            "Poinformuj o dostępnych możliwościach systemu: zapytania do bazy danych (zamówienia, " +
+            "firmy, kontakty, oferty), operacje na plikach (szukaj, czytaj, zapisz, usuń) " +
+            "oraz wyszukiwanie w internecie. Wpisz 'help' aby zobaczyć wszystkie komendy.";
 
         public ChatAgent(
             FileAgent fileAgent,
@@ -151,7 +162,7 @@ namespace Mastra48.Demo.Agents
                     break;
 
                 default:
-                    response = GetGeneralResponse(query);
+                    response = await GetGeneralResponseAsync(query);
                     break;
             }
 
@@ -164,15 +175,22 @@ namespace Mastra48.Demo.Agents
 
         private async Task<string> DetectIntentAsync(string query)
         {
-            // 1. Try Chat AI classification first (if available)
+            // 1. Try Chat AI classification first (if available), using our system prompt
             if (_chat != null)
             {
                 try
                 {
-                    Log("Klasyfikuję intencję przez Chat AI...");
-                    var intent = await _chat.ClassifyIntentAsync(query);
-                    LogStep($"Chat AI zwrócił intencję: {intent}");
-                    return intent;
+                    Log("Klasyfikuję intencję przez Chat AI (systemprompt z ChatAgent.md)...");
+                    // Use the loaded system prompt from ChatAgent.md for intent classification
+                    var systemPrompt = !string.IsNullOrWhiteSpace(_systemPrompt)
+                        ? _systemPrompt
+                        : "Klasyfikuj zapytanie do jednej z kategorii: file, web, database, combined_db_file, general. Odpowiedz WYŁĄCZNIE nazwą kategorii.";
+                    var result = await _chat.CompleteAsync(systemPrompt, query, maxTokens: 20);
+                    var intent = (result ?? string.Empty).Trim().ToLower();
+                    var valid = new[] { "file", "web", "database", "combined_db_file", "general" };
+                    foreach (var v in valid)
+                        if (intent.Contains(v)) { LogStep($"Chat AI zwrócił intencję: {v}"); return v; }
+                    LogStep($"Chat AI zwrócił nieznaną intencję: {intent} – fallback do słownikowej.");
                 }
                 catch (Exception ex)
                 {
@@ -282,8 +300,24 @@ namespace Mastra48.Demo.Agents
         // General fallback response
         // ----------------------------------------------------------------
 
-        private string GetGeneralResponse(string query)
+        private async Task<string> GetGeneralResponseAsync(string query)
         {
+            // When LLM is available, use it with a dedicated conversational system prompt
+            if (_chat != null)
+            {
+                try
+                {
+                    Log("Generuję odpowiedź ogólną przez Chat AI...");
+                    var response = await _chat.CompleteAsync(_generalResponseSystemPrompt, query, maxTokens: 300);
+                    if (!string.IsNullOrWhiteSpace(response))
+                        return response;
+                }
+                catch (Exception ex)
+                {
+                    LogWarning($"Chat AI niedostępny ({ex.Message}) – używam odpowiedzi domyślnej.");
+                }
+            }
+
             return $"Rozumiem Twoje pytanie. Aby uzyskać najlepszą odpowiedź, możesz:\n" +
                    $"  • Zapytać o dane (np. \"Pokaż zamówienia z ostatniego miesiąca\")\n" +
                    $"  • Wyszukać informacje (np. \"Znajdź informacje o firmie Microsoft\")\n" +
