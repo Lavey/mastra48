@@ -1,0 +1,12 @@
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/bin/Debug/net48/Mastra48.Core.dll
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/bin/Debug/net48/Mastra48.Core.pdb
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/bin/Debug/net48/Newtonsoft.Json.dll
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.csproj.AssemblyReference.cache
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.AssemblyInfoInputs.cache
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.AssemblyInfo.cs
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.csproj.CoreCompileInputs.cache
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.sourcelink.json
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.AB020498.Up2Date
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.dll
+/home/runner/work/mastra48/mastra48/src/Mastra48.Core/obj/Debug/net48/Mastra48.Core.pdb

@@ -38,8 +38,10 @@ Mastra48.sln
     │   │   └── PubSub.cs           # IPubSub + EventEmitterPubSub
     │   └── Llm/
     │       └── LanguageModel.cs    # IMastraLanguageModel + supporting types
-    └── Mastra48.Tests/         # NUnit 3 unit tests (42 tests)
-        └── MastraTests.cs
+    ├── Mastra48.Tests/         # NUnit 3 unit tests (42 tests)
+    │   └── MastraTests.cs
+    └── Mastra48.Examples/      # Runnable console examples for every feature area
+        └── Program.cs          # Agent, Tools, Workflow, Memory, Events, Logger examples
 ```
 
 ---
@@ -140,6 +142,27 @@ Console.WriteLine(result.FinalOutput);  // Processed: Mastra
 
 ---
 
+## Examples
+
+The `src/Mastra48.Examples/` project contains a runnable console application that demonstrates every major feature of the library:
+
+| Example | What it shows |
+|---|---|
+| **Basic Agent** | Create a `Mastra` instance with an agent, inject a stub language model, call `GenerateAsync` |
+| **Tools** | Create typed tools with `ToolFactory.CreateTool<TIn,TOut>`, execute them directly and look them up from `Mastra` |
+| **Workflow** | Build a multi-step pipeline with `WorkflowFactory` + `.Then()`, run it via `RunAsync`, inspect per-step results |
+| **Memory** | Use `InMemoryMemory` to save/retrieve conversation messages across turns, then delete the thread |
+| **Events / PubSub** | Subscribe to topics via `MastraConfig.Events`, publish events with `PublishEventAsync` |
+| **Logger** | Compare `ConsoleLogger` (stdout) and `NoopLogger` (silent) |
+
+Run all examples with:
+
+```bash
+dotnet run --project src/Mastra48.Examples/Mastra48.Examples.csproj
+```
+
+---
+
 ## Building & Testing
 
 ### Windows (Visual Studio / MSBuild)
@@ -165,6 +188,9 @@ dotnet build src/Mastra48.Core/Mastra48.Core.csproj
 
 # Test (42 tests, all passing)
 dotnet test src/Mastra48.Tests/Mastra48.Tests.csproj
+
+# Run examples
+dotnet run --project src/Mastra48.Examples/Mastra48.Examples.csproj
 ```
 
 ---
