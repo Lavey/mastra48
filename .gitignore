@@ -17,3 +17,7 @@ packages/
 # OS
 .DS_Store
 Thumbs.db
+
+# Runtime-generated demo files (created by Mastra48.Demo at runtime)
+demo_files/
+src/Mastra48.Demo/bin/Debug/net48/demo_files/

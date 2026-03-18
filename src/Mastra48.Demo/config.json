@@ -1,0 +1,6 @@
+{
+  "MistralApiKey": "",
+  "MistralModel": "mistral-small-latest",
+  "LogLevel": "INFO",
+  "DemoDataDirectory": "demo_files"
+}

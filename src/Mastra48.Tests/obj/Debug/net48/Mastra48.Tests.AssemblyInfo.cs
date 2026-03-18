@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mastra48.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38d1f37f31216cdf5356a67c8b0cc625521ac4bc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f8bc0337a2c403bef74dce19ac597d2c718a645")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mastra48.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mastra48.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
