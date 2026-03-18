@@ -7,9 +7,9 @@ A port of [mastra-ai/mastra](https://github.com/mastra-ai/mastra) to **.NET 4.8 
 ## Project Structure
 
 ```
-Mastra48.sln
+Aype.AI.sln
 └── src/
-    ├── Mastra48.Core/          # Core library (targeting net48, LangVersion 7.3)
+    ├── Aype.AI.Core/          # Core library (targeting net48, LangVersion 7.3)
     │   ├── Mastra.cs           # Central orchestrator (mirrors packages/core/src/mastra/)
     │   ├── Agent/
     │   │   ├── Agent.cs        # AI agent class (mirrors packages/core/src/agent/agent.ts)
@@ -38,9 +38,9 @@ Mastra48.sln
     │   │   └── PubSub.cs           # IPubSub + EventEmitterPubSub
     │   └── Llm/
     │       └── LanguageModel.cs    # IMastraLanguageModel + supporting types
-    ├── Mastra48.Tests/         # NUnit 3 unit tests (42 tests)
+    ├── Aype.AI.Tests/         # NUnit 3 unit tests (42 tests)
     │   └── MastraTests.cs
-    └── Mastra48.Examples/      # Runnable console examples for every feature area
+    └── Aype.AI.Examples/      # Runnable console examples for every feature area
         └── Program.cs          # Agent, Tools, Workflow, Memory, Events, Logger examples
 ```
 
@@ -64,13 +64,13 @@ Mastra48.sln
 ## Quick Start
 
 ```csharp
-using Mastra48;
-using Mastra48.Agent;
-using Mastra48.Llm;
-using Mastra48.Logger;
-using Mastra48.Storage;
-using Mastra48.Workflows;
-using Mastra48.Tools;
+using Aype.AI;
+using Aype.AI.Agent;
+using Aype.AI.Llm;
+using Aype.AI.Logger;
+using Aype.AI.Storage;
+using Aype.AI.Workflows;
+using Aype.AI.Tools;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -134,17 +134,17 @@ Console.WriteLine(result.FinalOutput);  // Processed: Mastra
 | `createWorkflow(id).then(step1).then(step2)` | `WorkflowFactory.CreateWorkflow(id).Then(step1).Then(step2)` |
 | `agent.generate({ prompt })` | `await agent.GenerateAsync(new AgentGenerateOptions { Prompt = ... })` |
 | `workflow.execute({ input })` | `await workflow.RunAsync(new WorkflowRunOptions { Input = ... })` |
-| `MastraError` | `Mastra48.Error.MastraError` |
-| `LogLevel` | `Mastra48.Logger.LogLevel` |
-| `EventEmitterPubSub` | `Mastra48.Events.EventEmitterPubSub` |
-| `InMemoryStorage` | `Mastra48.Storage.InMemoryStorage` |
-| `InMemoryMemory` | `Mastra48.Memory.InMemoryMemory` |
+| `MastraError` | `Aype.AI.Error.MastraError` |
+| `LogLevel` | `Aype.AI.Logger.LogLevel` |
+| `EventEmitterPubSub` | `Aype.AI.Events.EventEmitterPubSub` |
+| `InMemoryStorage` | `Aype.AI.Storage.InMemoryStorage` |
+| `InMemoryMemory` | `Aype.AI.Memory.InMemoryMemory` |
 
 ---
 
 ## Examples
 
-The `src/Mastra48.Examples/` project contains a runnable console application that demonstrates every major feature of the library:
+The `src/Aype.AI.Examples/` project contains a runnable console application that demonstrates every major feature of the library:
 
 | Example | What it shows |
 |---|---|
@@ -158,7 +158,7 @@ The `src/Mastra48.Examples/` project contains a runnable console application tha
 Run all examples with:
 
 ```bash
-dotnet run --project src/Mastra48.Examples/Mastra48.Examples.csproj
+dotnet run --project src/Aype.AI.Examples/Aype.AI.Examples.csproj
 ```
 
 ---
@@ -169,13 +169,13 @@ dotnet run --project src/Mastra48.Examples/Mastra48.Examples.csproj
 
 ```bash
 # Restore NuGet packages
-nuget restore Mastra48.sln
+nuget restore Aype.AI.sln
 
 # Build
-msbuild Mastra48.sln /p:Configuration=Release
+msbuild Aype.AI.sln /p:Configuration=Release
 
 # Test (requires NUnit Console Runner or VS Test Explorer)
-nunit3-console src\Mastra48.Tests\bin\Release\net48\Mastra48.Tests.dll
+nunit3-console src\Aype.AI.Tests\bin\Release\net48\Aype.AI.Tests.dll
 ```
 
 ### Linux / macOS (for development / CI verification with net8.0 target)
@@ -184,13 +184,13 @@ The code is also verified with `net8.0` target and C# 7.3 language version on Li
 
 ```bash
 # Build
-dotnet build src/Mastra48.Core/Mastra48.Core.csproj
+dotnet build src/Aype.AI.Core/Aype.AI.Core.csproj
 
 # Test (42 tests, all passing)
-dotnet test src/Mastra48.Tests/Mastra48.Tests.csproj
+dotnet test src/Aype.AI.Tests/Aype.AI.Tests.csproj
 
 # Run examples
-dotnet run --project src/Mastra48.Examples/Mastra48.Examples.csproj
+dotnet run --project src/Aype.AI.Examples/Aype.AI.Examples.csproj
 ```
 
 ---
