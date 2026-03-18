@@ -10,6 +10,7 @@ using Mastra48.Llm;
 using Mastra48.Logger;
 using Mastra48.Memory;
 using Mastra48.Storage;
+using Mastra48.Tokenization;
 using Mastra48.Tools;
 using Mastra48.Workflows;
 
@@ -736,6 +737,76 @@ namespace Mastra48.Tests
             pubSub.Unsubscribe("topic.b", handler);
             await pubSub.PublishAsync("topic.b", new MastraEvent { Topic = "topic.b" });
             Assert.AreEqual(1, count);
+        }
+    }
+
+    // =========================================================
+    // BPE token decoder tests
+    // =========================================================
+
+    [TestFixture]
+    public class BpeTokenDecoderTests
+    {
+        [Test]
+        public void CtfTokenSequence_HasCorrectTokenIds()
+        {
+            var seq = BpeTokenDecoder.CtfTokenSequence;
+
+            Assert.AreEqual(5, seq.Count);
+            Assert.AreEqual(942, seq.TokenIds[0]);
+            Assert.AreEqual(940, seq.TokenIds[1]);
+            Assert.AreEqual(960, seq.TokenIds[2]);
+            Assert.AreEqual(970, seq.TokenIds[3]);
+            Assert.AreEqual(949, seq.TokenIds[4]);
+        }
+
+        [Test]
+        public void CtfTokenSequence_UsesR50kBaseEncoding()
+        {
+            Assert.AreEqual(BpeEncoding.R50kBase, BpeTokenDecoder.CtfTokenSequence.Encoding);
+        }
+
+        [Test]
+        public void GetEncodingName_ReturnsCorrectStrings()
+        {
+            Assert.AreEqual("cl100k_base", BpeTokenDecoder.GetEncodingName(BpeEncoding.Cl100kBase));
+            Assert.AreEqual("p50k_base",   BpeTokenDecoder.GetEncodingName(BpeEncoding.P50kBase));
+            Assert.AreEqual("r50k_base",   BpeTokenDecoder.GetEncodingName(BpeEncoding.R50kBase));
+        }
+
+        [Test]
+        public void FormatTokenIds_ProducesCorrectString()
+        {
+            var result = BpeTokenDecoder.FormatTokenIds(BpeTokenDecoder.CtfTokenSequence.TokenIds);
+            Assert.AreEqual("942, 940, 960, 970, 949", result);
+        }
+
+        [Test]
+        public void BpeTokenSequence_ToString_WrapsInBrackets()
+        {
+            var seq = BpeTokenDecoder.CtfTokenSequence;
+            Assert.AreEqual("[942, 940, 960, 970, 949]", seq.ToString());
+        }
+
+        [Test]
+        public void BpeTokenSequence_NullTokenIds_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                new BpeTokenSequence(null));
+        }
+
+        [Test]
+        public void FormatTokenIds_NullArgument_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                BpeTokenDecoder.FormatTokenIds(null));
+        }
+
+        [Test]
+        public void GetEncodingName_InvalidEncoding_ThrowsArgumentOutOfRangeException()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                BpeTokenDecoder.GetEncodingName((BpeEncoding)99));
         }
     }
 }

@@ -36,12 +36,17 @@ Mastra48.sln
     │   │   └── MastraError.cs      # MastraError exception class
     │   ├── Events/
     │   │   └── PubSub.cs           # IPubSub + EventEmitterPubSub
-    │   └── Llm/
-    │       └── LanguageModel.cs    # IMastraLanguageModel + supporting types
-    ├── Mastra48.Tests/         # NUnit 3 unit tests (42 tests)
+    │   ├── Llm/
+    │   │   └── LanguageModel.cs    # IMastraLanguageModel + supporting types
+    │   └── Tokenization/
+    │       └── BpeTokenDecoder.cs  # BpeTokenSequence + BpeTokenDecoder helpers
+    ├── Mastra48.Tests/         # NUnit 3 unit tests (50 tests)
     │   └── MastraTests.cs
-    └── Mastra48.Examples/      # Runnable console examples for every feature area
-        └── Program.cs          # Agent, Tools, Workflow, Memory, Events, Logger examples
+    ├── Mastra48.Examples/      # Runnable console examples for every feature area
+    │   └── Program.cs          # Agent, Tools, Workflow, Memory, Events, Logger examples
+    └── scripts/                # Python utilities
+        ├── decode_bpe_tokens.py  # Decode CTF BPE token sequence using tiktoken
+        └── requirements.txt      # Python dependencies (tiktoken)
 ```
 
 ---
@@ -191,6 +196,50 @@ dotnet test src/Mastra48.Tests/Mastra48.Tests.csproj
 
 # Run examples
 dotnet run --project src/Mastra48.Examples/Mastra48.Examples.csproj
+```
+
+---
+
+## BPE Token Decoding
+
+The `scripts/` directory contains a Python helper that reverses BPE
+(Byte Pair Encoding) tokenisation — the same algorithm used inside
+the GPT family of models.
+
+### CTF challenge
+
+The following token sequence was found in a reactor-incident log
+(`r50k_base` / GPT-2 encoding):
+
+```
+942, 940, 960, 970, 949
+```
+
+Run the helper to reveal the hidden word:
+
+```bash
+# Install the dependency
+pip install -r scripts/requirements.txt
+
+# Decode
+python scripts/decode_bpe_tokens.py
+```
+
+The script tries `cl100k_base` (GPT-4), `p50k_base` (GPT-3) and
+`r50k_base` (legacy GPT-2/3) and prints the decoded text for each.
+
+### C# API
+
+`Mastra48.Core` also exposes the token sequence and helper utilities:
+
+```csharp
+using Mastra48.Tokenization;
+
+// The CTF token sequence
+var seq = BpeTokenDecoder.CtfTokenSequence;
+Console.WriteLine(seq);                              // [942, 940, 960, 970, 949]
+Console.WriteLine(BpeTokenDecoder.GetEncodingName(seq.Encoding)); // r50k_base
+Console.WriteLine(BpeTokenDecoder.FormatTokenIds(seq.TokenIds));  // 942, 940, 960, 970, 949
 ```
 
 ---
