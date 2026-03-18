@@ -1,6 +1,6 @@
 {
-  "MistralApiKey": "",
-  "MistralModel": "mistral-small-latest",
+  "ChatApiKey": "",
+  "ChatModel": "gpt-4o-mini",
   "LogLevel": "INFO",
   "DemoDataDirectory": "demo_files"
 }
